@@ -1,13 +1,16 @@
-import { configureStore, ThunkAction, Action, combineReducers, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
 import { createHashHistory } from "history";
 import { connectRouter, routerMiddleware } from "connected-react-router";
-import counterReducer from "../features/counter/counterSlice";
+// import counterReducer from "../features/counter/counterSlice";
+import { userReduser } from "../reducers/userReducer";
+import { loginUser } from "../reducers/loginUserReducer";
 
 export const history = createHashHistory();
 
 const reducer = combineReducers({
   router: connectRouter(history),
-  counter: counterReducer,
+  userReducer: userReduser,
+  loginUser: loginUser,
 });
 
 export const store = configureStore({
