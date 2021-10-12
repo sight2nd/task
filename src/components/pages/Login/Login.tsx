@@ -6,10 +6,12 @@ import InputPressEnterKey from "../../parts/InputPressEnterKey";
 import { store } from "../../../app/store";
 import "./Login.css";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
 
 export type LoginForm = {
-  labelStr: string;
-  errorStr: string;
+  label: string;
+  error: string;
   limit?: number;
 };
 
@@ -20,13 +22,16 @@ type Forms = {
 
 const Today = new Date();
 
+/* model */
+const dummyModel: Forms = {
+  user: { label: "ユーザー名", error: "未入力です", limit: 1 },
+  pass: { label: "パスワード", error: "パスワードは6文字以上で入力してください", limit: 6 },
+};
 export const Login = () => {
-  /* model */
-  const dummyModel: Forms = {
-    user: { labelStr: "ユーザー名", errorStr: "未入力です", limit: 1 },
-    pass: { labelStr: "パスワード", errorStr: "パスワードは6文字以上で入力してください", limit: 6 },
-  };
-
+  /* selector */
+  const { user } = useSelector((state: RootState) => state);
+  /* dispatch */
+  const dispatch = useAppDispatch();
   /* state */
   const [id, setID] = useState("");
   const [pass, setPass] = useState("");
@@ -34,19 +39,16 @@ export const Login = () => {
   const [validation, setValidation] = useState(false);
 
   /* ref */
-  const buttonRef: LegacyRef<HTMLButtonElement> = useRef(null);
-
-  /* dispatch */
-  const dispatch = useAppDispatch();
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // const test = useSelector();
 
   /* handler */
   const handleClickLoginButton = () => {
     buttonRef.current?.focus();
-    store.getState().userReducer.forEach((f) => {
+    user.forEach((f) => {
       if (f.id === id && f.pass === pass) {
-        store.dispatch({
+        dispatch({
           type: "LOG_IN",
           user: id,
         });
@@ -68,7 +70,12 @@ export const Login = () => {
       <div className={"main"}>
         <h1 className={"title"}>Login</h1>
         <div className={"idBox"}>
-          <InputPressEnterKey key={"input"} isValidation={validation} formLabel={dummyModel.user} onChange={(e) => onChangeInput(e, setID)} />
+          <InputPressEnterKey
+            key={"input"}
+            isValidation={validation}
+            formLabel={dummyModel.user}
+            onChange={(e) => onChangeInput(e, setID)}
+          />
         </div>
         <div className={"passArea"}>
           <InputPressEnterKey

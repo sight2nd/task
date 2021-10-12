@@ -9,7 +9,7 @@ export const history = createHashHistory();
 
 const reducer = combineReducers({
   router: connectRouter(history),
-  userReducer: userReduser,
+  user: userReduser,
   loginUser: loginUser,
 });
 

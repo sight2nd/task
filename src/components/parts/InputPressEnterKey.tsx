@@ -9,61 +9,52 @@ type InputProps = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputPressEnterKey = (props: InputProps) => {
-  const { formLabel: form, onPressEnterKey, type, onChange, isValidation } = props;
+  const { formLabel: form, onPressEnterKey, type, onChange: _onChange, isValidation } = props;
   const [str, setStr] = useState("");
   const [value, setValue] = useState("");
 
   const inputRef: LegacyRef<HTMLInputElement> = useRef(null);
-  const pressEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!onPressEnterKey) {
-      return;
-    }
-    if (e.key === "Enter") {
-      inputRef.current?.blur();
-      onPressEnterKey();
-    }
-  };
 
   const onBlurInput = () => {
-    if (!form || !form.limit) {
-      return;
-    }
-    if (value.length >= form.limit) {
-      setStr("");
-    }
+    if (value.length >= (form?.limit || 0)) setStr("");
   };
 
-  const onChangeValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  }, []);
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!onChange) return;
+      onChange(e);
+      setValue(e.target.value);
+    },
+    [_onChange]
+  );
+
+  const onKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!onPressEnterKey) return;
+      if (e.key === "Enter") {
+        inputRef.current?.blur();
+        onPressEnterKey();
+      }
+    },
+    [onPressEnterKey, inputRef.current]
+  );
 
   useEffect(() => {
-    if (!form || !form.limit || !form.errorStr) {
-      return;
-    }
-    if (isValidation && value.length < form.limit) {
-      setStr(form.errorStr);
-    } else {
-    }
+    if (isValidation && value.length < (form?.limit || NaN)) setStr(form?.error || "");
   }, [isValidation]);
+
   return (
     <>
       <div key={`parentInput1`}>
         {/* {form ? form.labelStr : ""} */}
         <input
           type={type}
-          placeholder={form?.labelStr}
+          placeholder={form?.label}
           key={`inputChild`}
           ref={inputRef}
-          onBlur={() => onBlurInput()}
-          onKeyPress={(e) => pressEnterKey(e)}
-          onChange={(e) => {
-            if (!onChange) {
-              return;
-            }
-            onChange(e);
-            onChangeValue(e);
-          }}
+          onBlur={onBlurInput}
+          onKeyPress={onKeyPress}
+          onChange={onChange}
         />
         {str}
       </div>

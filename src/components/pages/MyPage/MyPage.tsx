@@ -24,8 +24,8 @@ const MyPage = () => {
 
   useEffect(() => {
     // console.log(findUser());
-    console.log(store.getState().userReducer);
-    const user = store.getState().userReducer.find((f) => f.id === store.getState().loginUser);
+    console.log(store.getState().user);
+    const user = store.getState().user.find((f) => f.id === store.getState().loginUser);
     console.log(user);
     if (!user?.name) {
       dispatch(push(Path.registerPage));
