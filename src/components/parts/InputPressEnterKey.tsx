@@ -21,8 +21,8 @@ const InputPressEnterKey = (props: InputProps) => {
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!onChange) return;
-      onChange(e);
+      if (!_onChange) return;
+      _onChange(e);
       setValue(e.target.value);
     },
     [_onChange]

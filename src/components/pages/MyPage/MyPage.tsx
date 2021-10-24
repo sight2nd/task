@@ -1,9 +1,12 @@
 import { Path } from "../../routers/routers";
 import { useAppDispatch } from "../../../app/hooks";
 import { push } from "connected-react-router";
-import { useState, useCallback, useEffect } from "react";
-import { store } from "../../../app/store";
+import { useState, useCallback, useEffect ,} from "react";
+import { RootState, store } from "../../../app/store";
 import { findUser } from "../../utillity/findUser";
+import { useSelector } from "react-redux";
+import { UsersActions } from "../../../redux/add-user/usersActions";
+
 // import { findUser } from "../utillity/findUser";
 
 const MyPage = () => {
@@ -11,6 +14,7 @@ const MyPage = () => {
   // const handleClick = () => {
   //   dispatch(push(Path.login));
   // };
+  const user = useSelector((state:RootState) => state.loginUser)
 
   const [key, setKey] = useState("TEST");
 
@@ -24,10 +28,8 @@ const MyPage = () => {
 
   useEffect(() => {
     // console.log(findUser());
-    console.log(store.getState().user);
-    const user = store.getState().user.find((f) => f.id === store.getState().loginUser);
-    console.log(user);
-    if (!user?.name) {
+    // const user = store.getState().user.find((f) => f.id === store.getState().loginUser);
+    if (!user?.userInfo.name) {
       dispatch(push(Path.registerPage));
     }
   }, []);

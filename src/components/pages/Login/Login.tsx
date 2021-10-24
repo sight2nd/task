@@ -1,4 +1,4 @@
-import React, { ChangeEvent, LegacyRef, useRef, useState } from "react";
+import React, { ChangeEvent, LegacyRef, useCallback, useEffect, useRef, useState } from "react";
 import { Path } from "../../routers/routers";
 import { useAppDispatch } from "../../../app/hooks";
 import { push } from "connected-react-router";
@@ -8,6 +8,7 @@ import "./Login.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
+import { LoginUserActions } from "../../../redux/set-user/loginUserActions";
 
 export type LoginForm = {
   label: string;
@@ -29,7 +30,8 @@ const dummyModel: Forms = {
 };
 export const Login = () => {
   /* selector */
-  const { user } = useSelector((state: RootState) => state);
+  const users = useSelector((state: RootState) => state.userList);
+  const user = useSelector((state:RootState) => state.loginUser);
   /* dispatch */
   const dispatch = useAppDispatch();
   /* state */
@@ -44,14 +46,11 @@ export const Login = () => {
   // const test = useSelector();
 
   /* handler */
-  const handleClickLoginButton = () => {
+  const handleClickLoginButton = useCallback(() => {
     buttonRef.current?.focus();
-    user.forEach((f) => {
-      if (f.id === id && f.pass === pass) {
-        dispatch({
-          type: "LOG_IN",
-          user: id,
-        });
+    users.forEach((f) => {
+      if (f.userInfo.id === id && f.userInfo.pass === pass) {
+        dispatch(LoginUserActions.setUser(f));
         dispatch(push(Path.myPage));
         // console.log(store.getState().loginUser);
       } else {
@@ -59,11 +58,15 @@ export const Login = () => {
       }
     });
     setValidation(true);
-  };
+  },[id,pass]);
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
     setState(e.target.value);
     setValidation(false);
   };
+
+  useEffect(()=>{
+    console.log(user);
+  },[])
 
   return (
     <>
