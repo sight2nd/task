@@ -18,7 +18,7 @@ export const DragLayer = (props: Props) => {
     }))
 
     useEffect(() => {
-        if(!isDnD) null
+        // if(!isDnD) null
     },[isDnD])
     return (
         <div>{renderItem}</div>
