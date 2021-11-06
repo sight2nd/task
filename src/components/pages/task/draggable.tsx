@@ -20,6 +20,7 @@ export type CardProps = {
     onClick: (e:number) => void;
     isChecked: boolean;
     isDnD: boolean;
+    type:string;
 }
 
 type DragItem = {
@@ -36,13 +37,13 @@ type DragItem = {
 export const SampleDraggable = (props: CardProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const {
-    id, text, index, moveCard, onClick, isChecked, isDnD,
+    id, text, index, moveCard, onClick, isChecked, isDnD, type
   } = props;
 
   const [opacity, setOpacity] = useState(1);
 
   const [correct, drop] = useDrop({
-    accept: 'card',
+    accept: type,
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
@@ -86,7 +87,7 @@ export const SampleDraggable = (props: CardProps) => {
   });
 
   const [collect, drag] = useDrag({
-    type: 'card',
+    type,
     item: () => ({ id, index }),
     collect: (monitor) => ({
       ...monitor,
@@ -108,10 +109,11 @@ export const SampleDraggable = (props: CardProps) => {
   }, [collect.isDragging]);
 
   useEffect(() => {
-    // console.log('kore',layer);
+    console.log('type', type);
     
   },[])
   return (
+    <>
     <div
       onMouseDown={((e) => e.preventDefault())}
       style={{
@@ -123,5 +125,7 @@ export const SampleDraggable = (props: CardProps) => {
     >
       {!collect.isDragging ? `${text} ${isChecked ? '<※>' : ''}` : 'DragNow!!'}
     </div>
+      <div>{`SAMPLE-CHILD${id}`}</div>
+      </>
   );
 };

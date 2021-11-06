@@ -10,7 +10,7 @@ import { cloneDeep } from "lodash";
 import update from 'immutability-helper';
 import { SampleDraggable } from "./draggable";
 import { DragLayer } from "./drag-layer";
-import {} from 'react-dnd-preview'
+// import {} from 'react-dnd-preview'
 
 type CardProps = {
   id:number;
@@ -29,9 +29,9 @@ const sampleList: CardProps[] = [
 ];
 
 const Base = () => {
-    const [select, setSelect] = useState(false);
-    const onClick = useCallback(() => {
-      setSelect(!select);
+const [select, setSelect] = useState(false);
+const onClick = useCallback(() => {
+  setSelect(!select);
 }, [select]);
 
 const [cards, setCards] = useState<CardProps[]>(cloneDeep(sampleList));
@@ -61,12 +61,11 @@ return (
         moveCard={moveCard}
         onClick={(e) => setNum(e)}
         isDnD
+        type={i < 4 ? 'test1' : 'test2'}
       />
     ))}
     </DndProvider>
   );
 }
-{/* <div>
-    </div> */}
 
 export default Base;
